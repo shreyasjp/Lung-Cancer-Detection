@@ -1,0 +1,320 @@
+{% load static %}
+{% if not user.is_authenticated %}
+    <script>
+        window.location.href = "{{ '/doctor_sign_in_page' }}";
+    </script>
+{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ patient_info.name }}</title>
+    <link rel="stylesheet" href="{% static 'Fonts/fonts.css' %}">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Montserrat;
+            background-color: #f9f9f9;
+            padding: 100px;
+    
+            background-image: url("{% static '/assets/bg-trans.png' %}");
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .container{
+            padding: 50px 100px 50px 100px;
+            width: 600px;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+        }
+        h1{
+            font-weight: 500;
+        }
+        h2{
+            align-self: baseline;
+            font-weight: 500;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 15px;
+        }
+
+        th, td {
+            border: 1px solid #000000;
+            border-radius: 5px;
+            padding: 8px;
+            text-align: left;
+        }
+        td{
+            border-color: #398cc4;
+        }
+
+        th {
+            background-color: #dbdbdb00;
+            font-weight: 400;
+        }
+        .yes {
+            border-color: #8eff8e; /* Green */
+        }
+
+        .no {
+            border-color: #ff8e8e; /* Red */
+        }
+        .file-box{
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #d8f5ff;
+            border-radius: 10px;
+        }
+        input[type="file"]::file-selector-button {
+            border-radius: 4px;
+            border: 1px solid #398cc4;
+            height: 40px;
+            cursor: pointer;
+            background-color: white;
+            margin-right: 16px;
+            width: 132px;
+            color: #398cc4;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background-color: #f3f4f6;
+        }
+        input[type="file"]::file-selector-button:active {
+            background-color: #e5e7eb;
+        }
+        input[type="submit"] {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #398cc4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #prediction-header{
+            align-self: center;
+            margin: 0%;
+            padding: 0%;
+            margin-bottom: 10px;
+        }
+        .prediction-container{
+            margin-top: 30px;
+            padding: 30px 40px;
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        .Normal {
+            background-color: #80c89656; /* Light green */
+        }
+
+        .Benign {
+            background-color: #add8e6; /* Light blue */
+        }
+
+        .Malignant {
+            background-color: #ffcccb; /* Light coral */
+        }
+        .navbar {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background-color: #2f2f2f;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            padding: 7px;
+            padding-top: 7px;
+        }
+        .navbar-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 800px;
+            padding: 0;
+            margin: 0;
+        }
+        .navbar img{
+            width: 25px;
+            height: 25px;
+        }
+        .nav-links{
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-links a{
+            text-decoration: none;
+            color: #ffffff;            
+            font-size: 14px;
+        }
+        .ct-image{
+            width: 450px;
+            height: auto;
+            align-self: center;
+            margin: 20px 0px 10px 0px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <img src="{% static 'assets/icons8-upload-50.png' %}" alt="Medimix Logo">
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'doctor_sign_in_page' %}">Dashboard</a>
+                <a href="{% url 'sign_out' %}">Sign Out</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Patient Information</h1>
+        <h2>General Information</h2>
+        <table>
+            <tr>
+                <th>Patient ID</th>
+                <td>{{ patient_info.patient_id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ patient_info.name }}</td>
+            </tr>
+            <tr>
+                <th>Age</th>
+                <td>{{ patient_info.age }}</td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>{{ patient_info.gender }}</td>
+            </tr>
+        </table>
+
+        <h2>Survey Results</h2>
+        <table>
+            <tr>
+                <th>Smoking</th>
+                <td class="{% if survey_results.smoking == 2 %}yes{% else %}no{% endif %}">{% if survey_results.smoking == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Yellow Fingers</th>
+                <td class="{% if survey_results.yellow_fingers == 2 %}yes{% else %}no{% endif %}">{% if survey_results.yellow_fingers == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Anxiety</th>
+                <td class="{% if survey_results.anxiety == 2 %}yes{% else %}no{% endif %}">{% if survey_results.anxiety == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Peer Pressure</th>
+                <td class="{% if survey_results.peer_pressure == 2 %}yes{% else %}no{% endif %}">{% if survey_results.peer_pressure == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Chronic Disease</th>
+                <td class="{% if survey_results.chronic_disease == 2 %}yes{% else %}no{% endif %}">{% if survey_results.chronic_disease == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Fatigue</th>
+                <td class="{% if survey_results.fatigue == 2 %}yes{% else %}no{% endif %}">{% if survey_results.fatigue == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Allergy</th>
+                <td class="{% if survey_results.allergy == 2 %}yes{% else %}no{% endif %}">{% if survey_results.allergy == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Wheezing</th>
+                <td class="{% if survey_results.wheezing == 2 %}yes{% else %}no{% endif %}">{% if survey_results.wheezing == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Alcohol Consuming</th>
+                <td class="{% if survey_results.alchohol_consuming == 2 %}yes{% else %}no{% endif %}">{% if survey_results.alcohol_consuming == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Coughing</th>
+                <td class="{% if survey_results.COUGHING == 2 %}yes{% else %}no{% endif %}">{% if survey_results.coughing == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Shortness of Breath</th>
+                <td class="{% if survey_results.shortness_of_breathy == 2 %}yes{% else %}no{% endif %}">{% if survey_results.shortness_of_breath == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Swallowing Difficulty</th>
+                <td class="{% if survey_results.swallowing_difficulty == 2 %}yes{% else %}no{% endif %}">{% if survey_results.swallowing_difficulty == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Chest Pain</th>
+                <td class="{% if survey_results.chest_pain == 2 %}yes{% else %}no{% endif %}">{% if survey_results.chest_pain == 2 %}Yes{% else %}No{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Text Prediction</th>
+                <td class="{% if survey_results.text_prediction %}yes{% else %}no{% endif %}">{% if survey_results.text_prediction %}Positive{% else %}Negative{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Text Prediction Percentage</th>
+                <td>{{ survey_results.text_prediction_percentage }}</td>
+            </tr>
+        </table>
+        <form action="{% url 'ProcessImage' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="patient_id" value="{{ patient_info.patient_id }}">
+            <div class="file-box">
+                <input id="file-input" type="file" name="image" accept="image/*" required>
+            </div>
+            <input type="submit" value="Continue">
+        </form>
+        <div class="prediction-container">
+            <h2 id="prediction-header">{% if previousData %}Previous CT Analysis Report</h2>
+            {% if prediction %}
+            <img class="ct-image" src="/{{ survey_results.image_path  }}" alt="CT Image"/>
+                <table>
+                    <tr>
+                        <th>Category</th>
+                        <th>Probability</th>
+                        <th>Interpretation</th>
+                    </tr>
+                    {% for label, prob in prediction %}
+                        <tr {% if label == max_label %} class="{{label}}" {% endif %}>
+                            <td>{{ label }}</td>
+                            <td>{{ prob }}</td>
+                            <td>
+                                {% if label == 'Benign' %}
+                                    Benign tumors are non-cancerous growths that do not spread to other parts of the body.
+                                {% elif label == 'Normal' %}
+                                    Normal indicates that there are no abnormalities detected in the CT scan.
+                                {% elif label == 'Malignant' %}
+                                    Malignant tumors are cancerous growths that can spread to other parts of the body.
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No data available</p>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

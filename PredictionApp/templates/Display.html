@@ -1,0 +1,176 @@
+{% load static %} {% if not user.is_authenticated %}
+<script>
+  window.location.href = "{{ '/doctor_sign_in_page' }}";
+</script>
+{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient List</title>
+    <link rel="stylesheet" href="{% static 'Fonts/fonts.css' %}" />
+    <style>
+      body {
+        font-family: Montserrat;
+        background-image: url("{% static '/assets/bg-trans.png' %}");
+        background-attachment: fixed;
+        background-position: center;
+      }
+      h1 {
+        font-weight: 500;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .btn {
+        padding: 6px 12px;
+        background-color: none;
+        color: #0070c6;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .btn:hover {
+        color: #0088ff;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: sans-serif;
+        background-color: #f9f9f9;
+        padding: 100px;
+      }
+      .container {
+        padding: 50px 100px 50px 100px;
+        width: 800px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+      }
+      a {
+        text-decoration: none;
+        color: white;
+      }
+      .navbar {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        background-color: #2f2f2f;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        padding: 7px;
+        padding-top: 7px;
+      }
+      .navbar-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 800px;
+        padding: 0;
+        margin: 0;
+      }
+      .navbar img {
+        width: 25px;
+        height: 25px;
+      }
+      .nav-links {
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+        gap: 25px;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: #ffffff;
+        font-size: 14px;
+      }
+      .malignant-true { background-color: #ffcccc; }
+      .malignant-false { background-color: #f4ffc2; }
+      .benign-true { background-color: #ffcccc; }
+      .benign-false { background-color: #f4ffc2; }
+      .normal-false { background-color: #ccffcc; }
+      .none-true { background-color: #f4ffc2; }
+      .none-false { background-color: none; }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-container">
+        <div class="logo">
+          <img
+            src="{% static 'assets/icons8-upload-50.png' %}"
+            alt="Medimix Logo"
+          />
+        </div>
+        <div class="nav-links">
+          <a href="{% url 'sign_out' %}">Sign Out</a>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h1>Patient Information</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Patient Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Prediction</th>
+            <th>%</th>
+            <th>CT Analysis</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for instance in survey_results_instances|dictsortreversed:"text_prediction_percentage" %}
+              <tr class="{% if instance.max_label == 'Malignant' and instance.text_prediction %}malignant-true{% endif %}
+              {% if instance.max_label == 'Malignant' and not instance.text_prediction %}malignant-false{% endif %}
+              {% if instance.max_label == 'Benign' and instance.text_prediction %}benign-true{% endif %}
+              {% if instance.max_label == 'Benign' and not instance.text_prediction %}benign-false{% endif %}
+              {% if instance.max_label == 'Normal' and not instance.text_prediction %}normal-false{% endif %}
+              {% if instance.max_label == None and instance.text_prediction %}none-true{% endif %}
+              {% if instance.max_label == None and not instance.text_prediction %}none-false{% endif %}">
+              <td>{{ instance.patient_id.patient_id }}</td>
+              <td>{{ instance.patient_id.name }}</td>
+              <td>{{ instance.patient_id.age }}</td>
+              <td>{{ instance.patient_id.gender }}</td>
+              <td>
+                {% if instance.text_prediction %}Positive{% else %}Negative{% endif %}
+              </td>
+              <td>{{ instance.text_prediction_percentage }}</td>
+              <td>
+                {% if instance.max_label %}{{ instance.max_label }}{% else %}No Data{% endif %}
+              </td>
+              <td>
+                <a href="{% url 'patient_info' patient_id=instance.patient_id.patient_id %}" class="btn">View</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,448 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medimix</title>
+    <link rel="stylesheet" href="{% static 'Fonts/fonts.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/Survey.css' %}"
+      type="text/css"
+    />
+    <style>
+      * {
+        font-family: Montserrat;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-container">
+        <div class="logo">
+          <img
+            src="{% static 'assets/icons8-upload-50.png' %}"
+            alt="Medimix Logo"
+          />
+        </div>
+        <div class="nav-links">
+          <a href="#">Home</a>
+          <a href="doctor_sign_in_page">Doctor Dashboard</a>
+        </div>
+      </div>
+    </div>
+    <h1 class="title">MEDIMIX</h1>
+    <div class="container">
+      <form action="process_survey" method="post">
+        {% csrf_token %}
+        <div class="patient-info">
+          <h1>Patient Information</h1>
+          <div class="name-box input-box">
+            <input type="text" id="name-input" name="name" required />
+            <label for="name-input">Enter your name</label>
+          </div>
+          <div class="age-box input-box">
+            <input type="number" id="age-input" name="age" max="140" required />
+            <label for="age-input">Enter your age</label>
+          </div>
+          <div id="gender-selector" class="">
+            <input
+              type="radio"
+              id="male-button"
+              name="gender"
+              value="1"
+              required
+            />
+            <label id="male-label" for="male-button">Male</label>
+            <input
+              type="radio"
+              id="female-button"
+              name="gender"
+              value="0"
+              required
+            />
+            <label id="female-label" for="female-button">Female</label>
+          </div>
+        </div>
+        <div class="survey-info">
+          <h1>Patient Screening</h1>
+          <p class="caption">
+            Answer the following questions to help us understand your health
+            condition better.
+          </p>
+          <div class="field-box">
+            <label for="smoking">Do you Smoke?</label>
+            <div class="field-answers">
+              <input
+                type="radio"
+                class="id"
+                ="smoking-yes"
+                name="smoking"
+                value="2"
+                required
+              />
+              <label for="smoking-yes">Yes</label>
+              <input
+                type="radio"
+                id="smoking-no"
+                name="smoking"
+                value="1"
+                required
+              />
+              <label for="smoking-no">No</label>
+              <input
+                type="radio"
+                id="smoking-oc"
+                name="smoking"
+                value="2"
+                required
+              />
+              <label for="smoking-oc">Occasionally</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="yellow-fingers"
+              >Have you noticed yellow discoloration on your fingers due to
+              smoking?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="yellow-fingers-yes"
+                name="yellow-fingers"
+                value="2"
+                required
+              />
+              <label for="yellow-fingers-yes">Yes</label>
+              <input
+                type="radio"
+                id="yellow-fingers-no"
+                name="yellow-fingers"
+                value="1"
+                required
+              />
+              <label for="yellow-fingers-no">No</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="anxiety"
+              >Do you experience symptoms of anxiety on a regular basis?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="anxiety-yes"
+                name="anxiety"
+                value="2"
+                required
+              />
+              <label for="anxiety-yes">Yes</label>
+              <input
+                type="radio"
+                id="anxiety-no"
+                name="anxiety"
+                value="1"
+                required
+              />
+              <label for="anxiety-no">No</label>
+              <input
+                type="radio"
+                id="anxiety-st"
+                name="anxiety"
+                value="2"
+                required
+              />
+              <label for="anxiety-st">Sometimes</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="peer-pressure"
+              >Have you ever felt pressured by peers or friends to engage in
+              activities like smoking?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="peer-pressure-yes"
+                name="peer-pressure"
+                value="2"
+                required
+              />
+              <label for="peer-pressure-yes">Yes</label>
+              <input
+                type="radio"
+                id="peer-pressure-no"
+                name="peer-pressure"
+                value="1"
+                required
+              />
+              <label for="peer-pressure-no">No</label>
+              <input
+                type="radio"
+                id="peer-pressure-st"
+                name="peer-pressure"
+                value="2"
+                required
+              />
+              <label for="peer-pressure-st">Sometimes</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="chronic-disease"
+              >Do you have any chronic health conditions (e.g., diabetes,
+              hypertension)?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="chronic-disease-yes"
+                name="chronic-disease"
+                value="2"
+                required
+              />
+              <label for="chronic-disease-yes">Yes</label>
+              <input
+                type="radio"
+                id="chronic-disease-no"
+                name="chronic-disease"
+                value="1"
+                required
+              />
+              <label for="chronic-disease-no">No</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="fatigue"
+              >Do you often feel tired or fatigued, regardless of physical
+              activity or rest?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="fatigue-yes"
+                name="fatigue"
+                value="2"
+                required
+              />
+              <label for="fatigue-yes">Yes</label>
+              <input
+                type="radio"
+                id="fatigue-no"
+                name="fatigue"
+                value="1"
+                required
+              />
+              <label for="fatigue-no">No</label>
+              <input
+                type="radio"
+                id="fatigue-st"
+                name="fatigue"
+                value="2"
+                required
+              />
+              <label for="fatigue-st">Sometimes</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="allergies">Do you have any allergies?</label>
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="allergies-yes"
+                name="allergies"
+                value="2"
+                required
+              />
+              <label for="allergies-yes">Yes</label>
+              <input
+                type="radio"
+                id="allergies-no"
+                name="allergies"
+                value="1"
+                required
+              />
+              <label for="allergies-no">No</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="wheezing"
+              >Do you experience wheezing or whistling sounds when you
+              breathe?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="wheezing-yes"
+                name="wheezing"
+                value="2"
+                required
+              />
+              <label for="wheezing-yes">Yes</label>
+              <input
+                type="radio"
+                id="wheezing-no"
+                name="wheezing"
+                value="1"
+                required
+              />
+              <label for="wheezing-no">No</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="alcohol-consumption"
+              >Do you consume alcoholic beverages?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="alcohol-consumption-yes"
+                name="alcohol-consumption"
+                value="2"
+                required
+              />
+              <label for="alcohol-consumption-yes">Yes</label>
+              <input
+                type="radio"
+                id="alcohol-consumption-no"
+                name="alcohol-consumption"
+                value="1"
+                required
+              />
+              <label for="alcohol-consumption-no">No</label>
+              <input
+                type="radio"
+                id="alcohol-consumption-oc"
+                name="alcohol-consumption"
+                value="2"
+                required
+              />
+              <label for="alcohol-consumption-oc">Occasionally</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="coughing"
+              >Do you experience persistent coughing that lasts for several
+              weeks or more?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="coughing-yes"
+                name="coughing"
+                value="2"
+                required
+              />
+              <label for="coughing-yes">Yes</label>
+              <input
+                type="radio"
+                id="coughing-no"
+                name="coughing"
+                value="1"
+                required
+              />
+              <label for="coughing-no">No</label>
+              <input
+                type="radio"
+                id="coughing-st"
+                name="coughing"
+                value="2"
+                required
+              />
+              <label for="coughing-st">Sometimes</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="shortness-of-breath"
+              >Do you frequently experience difficulty breathing or shortness of
+              breath?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="shortness-of-breath-yes"
+                name="shortness-of-breath"
+                value="2"
+                required
+              />
+              <label for="shortness-of-breath-yes">Yes</label>
+              <input
+                type="radio"
+                id="shortness-of-breath-no"
+                name="shortness-of-breath"
+                value="1"
+                required
+              />
+              <label for="shortness-of-breath-no">No</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="swallowing-difficulty"
+              >Do you experience difficulty swallowing food or liquids?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="swallowing-difficulty-yes"
+                name="swallowing-difficulty"
+                value="2"
+                required
+              />
+              <label for="swallowing-difficulty-yes">Yes</label>
+              <input
+                type="radio"
+                id="swallowing-difficulty-no"
+                name="swallowing-difficulty"
+                value="1"
+                required
+              />
+              <label for="swallowing-difficulty-no">No</label>
+              <input
+                type="radio"
+                id="swallowing-difficulty-oc"
+                name="swallowing-difficulty"
+                value="2"
+                required
+              />
+              <label for="swallowing-difficulty-oc">Occasionally</label>
+            </div>
+          </div>
+          <div class="field-box">
+            <label for="chest-pain"
+              >Do you experience chest pain or discomfort?</label
+            >
+            <div class="field-answers">
+              <input
+                type="radio"
+                id="chest-pain-yes"
+                name="chest-pain"
+                value="2"
+                required
+              />
+              <label for="chest-pain-yes">Yes</label>
+              <input
+                type="radio"
+                id="chest-pain-no"
+                name="chest-pain"
+                value="1"
+                required
+              />
+              <label for="chest-pain-no">No</label>
+              <input
+                type="radio"
+                id="chest-pain-st"
+                name="chest-pain"
+                value="2"
+                required
+              />
+              <label for="chest-pain-st">Sometimes</label>
+            </div>
+          </div>
+          <input type="submit" id="submit-button" value="Continue" />
+        </div>
+      </form>
+    </div>
+  </body>
+  <script type="text/javascript" src="{%static  'js/Survey.js'%}"></script>
+</html>
